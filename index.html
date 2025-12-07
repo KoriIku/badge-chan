@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI Badge Generator</title>
+<style>
+    :root {
+        --bg: #f5f7fa;
+        --card-bg: #ffffff;
+        --primary: #00a67d;
+        --text: #333;
+        --border: #dcdfe6;
+        --radius: 12px;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        max-width: 720px;
+        padding: 40px 20px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 28px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        padding: 22px;
+        margin-top: 18px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--border);
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0 16px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        font-size: 14px;
+    }
+
+    /* 状态按钮区域 */
+    .status-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 8px 0 16px;
+    }
+
+    .status-btn {
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        cursor: pointer;
+        background: #f0f0f0;
+        user-select: none;
+        font-size: 14px;
+        transition: .15s;
+    }
+
+    .status-btn.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    button:hover {
+        opacity: .92;
+    }
+
+    .preview img {
+        margin-top: 20px;
+        border-radius: 6px;
+    }
+
+    pre {
+        background: #2e2e2e;
+        color: #fff;
+        padding: 12px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .copy-btn {
+        margin-top: 8px;
+        background: #444;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>AI Badge Generator</h2>
+
+    <div class="card">
+        <label>AI 品牌</label>
+        <select id="brand">
+            <option value="GPT" data-logo="openai">GPT</option>
+            <option value="Claude" data-logo="anthropic">Claude</option>
+            <option value="Gemini" data-logo="google">Gemini</option>
+            <option value="DeepSeek" data-logo="">DeepSeek</option>
+            <option value="Copilot" data-logo="githubcopilot">GitHub Copilot</option>
+        </select>
+
+        <label>动作</label>
+        <select id="action">
+            <option>Reviewed</option>
+            <option>Assisted</option>
+            <option>Authored</option>
+            <option>Generated</option>
+            <option>Linted</option>
+            <option>Secured</option>
+        </select>
+
+        <label>Badge 文本格式</label>
+        <select id="format">
+            <option value="brand-action">品牌 动作（GPT Reviewed）</option>
+            <option value="action-by-brand">动作 by 品牌（Reviewed by GPT）</option>
+        </select>
+
+        <label>状态文本</label>
+        <div class="status-group" id="statusBtns">
+            <div class="status-btn active">100%</div>
+            <div class="status-btn">Yes</div>
+            <div class="status-btn">Pass</div>
+            <div class="status-btn">OK</div>
+            <div class="status-btn">v1.0</div>
+            <div class="status-btn">Custom</div>
+        </div>
+
+        <input id="statusCustom" placeholder="输入自定义状态…" style="display:none;">
+
+        <label>颜色（HEX）</label>
+        <input id="color" value="00a67d">
+
+        <button onclick="buildBadge()">生成徽章</button>
+    </div>
+
+    <div class="card">
+        <h3>预览</h3>
+        <div class="preview" id="preview"></div>
+
+        <h3>Markdown</h3>
+        <pre id="md"></pre>
+        <button class="copy-btn" onclick="copyMarkdown()">复制 Markdown</button>
+    </div>
+</div>
+
+<script>
+const statusBtns = document.getElementById("statusBtns");
+let currentStatus = "100%";
+
+statusBtns.addEventListener("click", e => {
+    if (!e.target.classList.contains("status-btn")) return;
+    [...statusBtns.children].forEach(btn => btn.classList.remove("active"));
+    e.target.classList.add("active");
+
+    currentStatus = e.target.textContent;
+
+    const customInput = document.getElementById("statusCustom");
+    if (currentStatus === "Custom") {
+        customInput.style.display = "block";
+    } else {
+        customInput.style.display = "none";
+    }
+});
+
+function buildBadge() {
+    const brandSel = document.getElementById("brand");
+    const brand = brandSel.value;
+    const logo = brandSel.selectedOptions[0].dataset.logo;
+
+    const action = document.getElementById("action").value;
+    const format = document.getElementById("format").value;
+
+    // 当前状态
+    let status = currentStatus;
+    if (status === "Custom") {
+        status = document.getElementById("statusCustom").value || "Custom";
+    }
+
+    // badge 文本逻辑
+    let label = "";
+    if (format === "brand-action") {
+        label = `${brand} ${action}`;
+    } else {
+        label = `${action} by ${brand}`;
+    }
+
+    const color = document.getElementById("color").value;
+
+    let url = `https://img.shields.io/badge/${encodeURIComponent(label)}-${encodeURIComponent(status)}-${color}`;
+    if (logo) url += `?logo=${logo}`;
+
+    document.getElementById("preview").innerHTML = `<img src="${url}">`;
+    document.getElementById("md").textContent = `![](${url})`;
+}
+
+function copyMarkdown() {
+    const text = document.getElementById("md").textContent;
+    navigator.clipboard.writeText(text);
+    alert("已复制！");
+}
+</script>
+
+</body>
+</html>
