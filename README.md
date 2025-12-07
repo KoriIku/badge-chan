@@ -1,5 +1,5 @@
 ![](https://img.shields.io/badge/Secured%20by%20GPT-100%25-00a67d?logo=openai) ![](https://img.shields.io/badge/Reviewed%20by%20Gemini-100%25-00a67d?logo=googlegemini)
-# badge-chan
+# vibe-badgee
 是时候在项目贡献者里加上我们的AI好伙伴的名字了！
 
 # 为什么？
