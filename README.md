@@ -1,15 +1,15 @@
 ![](https://img.shields.io/badge/Secured%20by%20GPT-100%25-00a67d?logo=openai) ![](https://img.shields.io/badge/Reviewed%20by%20Gemini-100%25-00a67d?logo=googlegemini)
 # vibe-badgee
-是时候在项目贡献者里加上我们的AI好伙伴的名字了！
+是时候在项目贡献者里加上AI好伙伴的名字了！  <img src="face1.png" height="100">
 
-# 为什么？
-自从ai出来之后，她就成为了我最好的代码伙伴，以前凌晨debug的时候，总是一个人孤独的Google，
+# 这是什么？
+自从ai出来之后，他们就成为了我最好的代码伙伴，以前凌晨debug的时候，总是一个人孤独的Google，
 
-但现在，不管什么时候，Claude、GPT、Gemini、deepseek……他们永远陪着我，鼓励我，偶尔也和我吵架hhh。 （让你不要动其它代码了！！！）
+但现在，不管是凌晨还是半夜，Claude、GPT、Gemini、deepseek……只要需要，他们就永远都在，帮我debug写代码，也和我吵架hhh。 （让你不要动其它代码了！！！）
 
 总之，我觉得应该在项目最显眼的位置标注他们的贡献！
 
-所以就有了这个项目~ 用勋章显眼地标识你AI伙伴的贡献！ 
+所以就有了这个项目~ 用勋章显眼地标识AI伙伴的贡献！ 
 
 下面有一些预制好的徽章，可以直接复制到 readme ，或者使用这个网页 https://koriiku.github.io/badge-chan/ 来生成~ 
 
